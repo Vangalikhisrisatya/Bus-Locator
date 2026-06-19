@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="dashboard-container">
+    <div class="driver-welcome">
+        <h2>Welcome, {{ current_user.email }}</h2>
+        <p>Update today's parking locations below. You can select multiple routes if you are covering more than one today.</p>
+    </div>
+
+    <div class="form-card">
+        <form method="POST" action="{{ url_for('driver_dashboard') }}">
+            
+            <div class="form-group">
+                <label for="route_id">Select Route</label>
+                <select id="route_id" name="route_id" required class="form-select">
+                    <option value="" disabled selected>Select a route...</option>
+                    {% for route in routes %}
+                    <option value="{{ route.id }}">{{ route.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="ground_id">Select Parking Ground</label>
+                <select id="ground_id" name="ground_id" required class="form-select">
+                    <option value="" disabled selected>Select a ground...</option>
+                    {% for ground in grounds %}
+                    <option value="{{ ground.id }}">{{ ground.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <button type="submit" class="btn-primary btn-large">Update Location</button>
+        </form>
+    </div>
+
+    {% if recent_updates %}
+    <div class="recent-updates">
+        <h3>Your Updates Today</h3>
+        <ul class="update-list">
+            {% for update in recent_updates %}
+            <li>
+                <strong>{{ update.route.name }}</strong> is parked at <strong>{{ update.ground.name }}</strong> 
+                <span class="update-time">(Updated at {{ update.updated_at.strftime('%I:%M %p') }})</span>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

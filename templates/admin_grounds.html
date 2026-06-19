@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="admin-header-nav">
+    <a href="{{ url_for('admin_dashboard') }}" class="back-link">← Back to Admin Control Panel</a>
+</div>
+
+<div class="dashboard-header">
+    <h1>Manage Parking Grounds</h1>
+    <p class="date-subtitle">Add or remove parking grounds</p>
+</div>
+
+<div class="admin-split-layout">
+    <!-- Form to add ground -->
+    <div class="form-card">
+        <h3>Add Parking Ground</h3>
+        <p class="form-subtitle">Define a new parking area</p>
+        
+        <form method="POST" action="{{ url_for('admin_grounds') }}" class="admin-form">
+            <div class="form-group">
+                <label for="name">Ground Name</label>
+                <input type="text" id="name" name="name" required placeholder="e.g., Ground 4 (Main Library)">
+            </div>
+            
+            <button type="submit" class="btn-primary btn-large">Add Parking Ground</button>
+        </form>
+    </div>
+
+    <!-- Table of grounds -->
+    <div class="table-card">
+        <h3>Existing Parking Grounds</h3>
+        <div class="table-responsive">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>Ground Name</th>
+                        <th style="text-align: right;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for ground in grounds %}
+                    <tr>
+                        <td>
+                            <span class="table-icon">🅿️</span>
+                            {{ ground.name }}
+                        </td>
+                        <td style="text-align: right;">
+                            <form method="POST" action="{{ url_for('delete_ground', ground_id=ground.id) }}" onsubmit="return confirm('Are you sure you want to delete this parking ground? This will delete today\'s updates for this ground.');" style="display: inline;">
+                                <button type="submit" class="btn-danger">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

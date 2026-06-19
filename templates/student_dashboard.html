@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="dashboard-header">
+    <h1>Today's Parking Locations</h1>
+    <p class="date-subtitle">{{ today }}</p>
+</div>
+
+<!-- Search Bar -->
+<div class="search-container">
+    <input type="text" id="search-input" placeholder="🔍 Search route name (e.g., Kakinada)..." class="search-input">
+</div>
+
+<!-- No Results Alert -->
+<div id="no-results" class="no-results" style="display: none;">
+    <div class="no-results-icon">🔎</div>
+    <h3>No routes found matching your search.</h3>
+    <p>Try searching for a different route name or location.</p>
+</div>
+
+<div class="route-grid">
+    {% for route in route_status %}
+    <div class="route-card {% if not route.has_data %}awaiting{% elif route.is_today %}updated{% else %}last-known{% endif %}">
+        <div class="route-card-header">
+            <h3>{{ route.route_name }}</h3>
+            {% if route.has_data %}
+                {% if route.is_today %}
+                    <span class="status-badge today">Today</span>
+                {% else %}
+                    <span class="status-badge fallback">Last Known</span>
+                {% endif %}
+            {% endif %}
+        </div>
+        <div class="route-card-body">
+            <div class="location-status">
+                <span class="status-icon">📍</span>
+                <span class="status-text">{{ route.ground_name }}</span>
+            </div>
+            {% if route.has_data %}
+                {% if route.is_today %}
+                <div class="time-status">
+                    <span class="time-icon">🕒</span>
+                    <span class="time-text">Updated today at {{ route.updated_at }}</span>
+                </div>
+                {% else %}
+                <div class="time-status">
+                    <span class="time-icon">🕒</span>
+                    <span class="time-text">Last seen on {{ route.update_date }} at {{ route.updated_at }}</span>
+                </div>
+                {% endif %}
+            {% endif %}
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<script>
+    document.getElementById('search-input').addEventListener('input', function(e) {
+        const query = e.target.value.toLowerCase().trim();
+        const cards = document.querySelectorAll('.route-grid .route-card');
+        let visibleCount = 0;
+        
+        cards.forEach(card => {
+            const routeName = card.querySelector('.route-card-header h3').textContent.toLowerCase();
+            if (routeName.includes(query)) {
+                card.style.display = '';
+                visibleCount++;
+            } else {
+                card.style.display = 'none';
+            }
+        });
+        
+        const noResults = document.getElementById('no-results');
+        if (visibleCount === 0) {
+            noResults.style.display = 'block';
+        } else {
+            noResults.style.display = 'none';
+        }
+    });
+</script>
+{% endblock %}

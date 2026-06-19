@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="admin-header-nav">
+    <a href="{{ url_for('admin_dashboard') }}" class="back-link">← Back to Admin Control Panel</a>
+</div>
+
+<div class="dashboard-header">
+    <h1>Parking Allocation Logs</h1>
+    <p class="date-subtitle">Historical archive of daily bus parking allocations</p>
+</div>
+
+<div class="table-card full-width">
+    <div class="table-card-header-flex">
+        <h3>Parking Logs (Sorted by Date & Time)</h3>
+    </div>
+    
+    <div class="table-responsive">
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Route</th>
+                    <th>Parking Lot / Ground</th>
+                    <th>Updated By (Driver)</th>
+                    <th>Last Updated</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if history %}
+                    {% for entry in history %}
+                    <tr>
+                        <td class="bold">{{ entry.date.strftime('%b %d, %Y') }}</td>
+                        <td>
+                            <span class="table-icon">🛣️</span>
+                            {{ entry.route.name if entry.route else 'Deleted Route' }}
+                        </td>
+                        <td>
+                            <span class="table-icon">📍</span>
+                            <span class="bold">{{ entry.ground.name if entry.ground else 'Deleted Ground' }}</span>
+                        </td>
+                        <td>
+                            <span class="table-icon">👤</span>
+                            {{ entry.driver.email if entry.driver else 'Deleted Driver' }}
+                        </td>
+                        <td class="text-muted">
+                            <span class="table-icon">🕒</span>
+                            {{ entry.updated_at.strftime('%I:%M %p') }}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="5" style="text-align: center; padding: 3rem; color: var(--text-muted);">
+                            No parking logs recorded yet.
+                        </td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

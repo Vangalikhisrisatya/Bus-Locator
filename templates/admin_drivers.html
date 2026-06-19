@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="admin-header-nav">
+    <a href="{{ url_for('admin_dashboard') }}" class="back-link">← Back to Admin Control Panel</a>
+</div>
+
+<div class="dashboard-header">
+    <h1>Manage Drivers & Users</h1>
+    <p class="date-subtitle">Add or remove driver/admin credentials</p>
+</div>
+
+<div class="admin-split-layout">
+    <!-- Form to add driver -->
+    <div class="form-card">
+        <h3>Create New User Account</h3>
+        <p class="form-subtitle">Register a driver or an administrator</p>
+        
+        <form method="POST" action="{{ url_for('admin_drivers') }}" class="admin-form">
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" required placeholder="name@college.edu">
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required placeholder="Minimum 6 characters">
+            </div>
+            
+            <div class="form-group checkbox-wrapper">
+                <label class="checkbox-label">
+                    <input type="checkbox" name="is_admin" value="y">
+                    <span>Grant Administrative Privileges</span>
+                </label>
+            </div>
+            
+            <button type="submit" class="btn-primary btn-large">Create User Account</button>
+        </form>
+    </div>
+
+    <!-- Table of drivers -->
+    <div class="table-card">
+        <h3>Registered Accounts</h3>
+        <div class="table-responsive">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th style="text-align: right;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for driver in drivers %}
+                    <tr>
+                        <td class="user-email-col">
+                            <span class="user-avatar-icon">👤</span>
+                            {{ driver.email }}
+                            {% if driver.id == current_user.id %}
+                                <span class="badge self">You</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if driver.is_admin %}
+                                <span class="badge admin">Admin</span>
+                            {% else %}
+                                <span class="badge driver">Driver</span>
+                            {% endif %}
+                        </td>
+                        <td style="text-align: right;">
+                            {% if driver.id != current_user.id %}
+                            <form method="POST" action="{{ url_for('delete_driver', driver_id=driver.id) }}" onsubmit="return confirm('Are you sure you want to delete this account? This will also remove their parking history.');" style="display: inline;">
+                                <button type="submit" class="btn-danger">Delete</button>
+                            </form>
+                            {% else %}
+                            <span class="action-disabled">Protected</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

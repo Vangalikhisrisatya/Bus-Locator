@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="dashboard-header">
+    <h1>Admin Control Panel</h1>
+    <p class="date-subtitle">System Overview and Configuration</p>
+</div>
+
+<div class="stats-grid">
+    <div class="stat-card">
+        <span class="stat-icon">👥</span>
+        <div class="stat-info">
+            <span class="stat-value">{{ total_drivers }}</span>
+            <span class="stat-label">Total Users / Drivers</span>
+        </div>
+    </div>
+    <div class="stat-card">
+        <span class="stat-icon">🗺️</span>
+        <div class="stat-info">
+            <span class="stat-value">{{ total_routes }}</span>
+            <span class="stat-label">Total Routes</span>
+        </div>
+    </div>
+    <div class="stat-card">
+        <span class="stat-icon">📍</span>
+        <div class="stat-info">
+            <span class="stat-value">{{ total_grounds }}</span>
+            <span class="stat-label">Parking Grounds</span>
+        </div>
+    </div>
+    <div class="stat-card highlight">
+        <span class="stat-icon">🚌</span>
+        <div class="stat-info">
+            <span class="stat-value">{{ today_updates_count }}</span>
+            <span class="stat-label">Updates Today</span>
+        </div>
+    </div>
+</div>
+
+<div class="admin-menu-grid">
+    <a href="{{ url_for('admin_drivers') }}" class="menu-card">
+        <div class="menu-icon">⚙️</div>
+        <h3>Manage Drivers</h3>
+        <p>Add new driver profiles, assign roles, or delete inactive drivers from the system.</p>
+        <span class="menu-action">Open Settings →</span>
+    </a>
+    
+    <a href="{{ url_for('admin_routes') }}" class="menu-card">
+        <div class="menu-icon">🛣️</div>
+        <h3>Manage Routes</h3>
+        <p>Define new transit routes for the buses or remove routes that are no longer operational.</p>
+        <span class="menu-action">Open Settings →</span>
+    </a>
+    
+    <a href="{{ url_for('admin_grounds') }}" class="menu-card">
+        <div class="menu-icon">🅿️</div>
+        <h3>Manage Grounds</h3>
+        <p>Register new parking lots/grounds or update existing naming configurations.</p>
+        <span class="menu-action">Open Settings →</span>
+    </a>
+    
+    <a href="{{ url_for('admin_history') }}" class="menu-card">
+        <div class="menu-icon">📜</div>
+        <h3>Parking History</h3>
+        <p>View historical logs and review previous daily bus parking records and update times.</p>
+        <span class="menu-action">View Logs →</span>
+    </a>
+</div>
+{% endblock %}
